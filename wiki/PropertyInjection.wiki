@@ -24,7 +24,7 @@ For example, if you may choose to keep the tokens in your file like this -
   </property>
 </bean>
 }}}
-In this case, your {{{patternPrefix}}} is "@__"
+In this case, your {{{patternPrefix}}} is "{{{@__}}}"
 </td>
   <td width="250" valign="top" align="left">Default: ${</td>
  </tr>

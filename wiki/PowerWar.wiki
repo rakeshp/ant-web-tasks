@@ -1,2 +1,2 @@
+#summary PowerWar - All in one powerful extension of the Ant WAR task.
 #labels Featured
-#PowerWar - All in one powerful extension of the Ant WAR task.

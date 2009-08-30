@@ -48,9 +48,8 @@ While performing your WAR operation, you can instruct {{{<powerWar>}}} to {{{inj
 <target name="my-war-target">
   <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
     <!-- 
-     Bare minimum usage of the injector. You can customize the behavior
-     for more advanced pattern matching.
-     For more, look here
+     Bare minimum usage of the injector. 
+     For other possible attributes, go here
     -->
     <inject verbose="on">
       <path>

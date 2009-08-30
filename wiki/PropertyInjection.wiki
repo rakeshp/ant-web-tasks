@@ -4,5 +4,27 @@
 Basic concepts related to property injection are explained [http://code.google.com/p/ant-web-tasks/wiki/PowerWar#What_is_property_injection? here]. 
 
 == Inject Attributes ==
-|| <b>attribute</b> || <b>description</b> || <b>remarks</b> ||
-|| {{{patternPrefix}}} || The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these properties in your files. || Default: <b>${</b> || 
+<table cellspacing="0" cellpadding="0" border="1" width="600">
+ <tr>
+  <td width="100">
+   <b>Attribute</b>
+  </td>
+  <td width="250">
+   <b>Description</b>
+  </td>
+  <td width="250">
+    <b>Remarks</b>
+  </td>
+ </tr>
+ <tr>
+  <td width="100">
+   {{{patternPrefix}}}
+  </td>
+  <td width="250">
+    The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these properties in your files.
+  </td>
+  <td width="250">
+   Default: ${
+  </td>
+ </tr>
+</table>

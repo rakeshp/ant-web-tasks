@@ -67,6 +67,6 @@ public class CacheBusterPreference implements Serializable {
   }
 
   public String toString() {
-    return this.filePath + "=>" + new Date(this.lastModifiedTime).toString();
+    return this.filePath + "("+ this.version + ") =>" + new Date(this.lastModifiedTime).toString();
   }
 }

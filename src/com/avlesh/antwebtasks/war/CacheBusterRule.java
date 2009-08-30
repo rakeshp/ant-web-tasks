@@ -1,27 +1,20 @@
 package com.avlesh.antwebtasks.war;
 
-import org.apache.tools.ant.types.FileSet;
-
 import java.io.File;
 import java.util.regex.Pattern;
 
 public class CacheBusterRule {
   protected File file;
-  protected FileSet fileSet;
   protected Pattern from;
   protected String to;
 
-  public void addFileset(FileSet fileSet){
-    this.fileSet = fileSet;
+  public boolean isCheckFileLastModifiedTime(){
+    return file != null && file.exists();
   }
 
-  public FileSet createFileset() {
-    return new FileSet();
-  }
-
-  public boolean isEmpty(boolean checkLastModified){
+  public boolean isEmpty(){
     boolean isEmpty;
-    if(!checkLastModified){
+    if(!isCheckFileLastModifiedTime()){
       isEmpty = (from == null || to == null);
     }else{
       isEmpty = (file == null || from == null || to == null);
@@ -53,13 +46,5 @@ public class CacheBusterRule {
     if(from != null && !"".equals(from.trim())){
       this.from = Pattern.compile(from);
     }
-  }
-
-  public FileSet getFileSet() {
-    return fileSet;
-  }
-
-  public void setFileSet(FileSet fileSet) {
-    this.fileSet = fileSet;
   }
 }

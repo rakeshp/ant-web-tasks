@@ -18,7 +18,6 @@ public class CacheBuster {
   protected String versionPropertyKey;
   protected boolean verbose = true;
   protected boolean modifyOriginal = false;
-  protected boolean checkFileLastModifiedTime = false;
   protected File cacheBusterPreferencesFile = new File(".cache-buster.pref");
   protected List<CacheBusterRule> rules = new ArrayList<CacheBusterRule>();
   protected List<FileSet> fileSets = new ArrayList<FileSet>();
@@ -49,8 +48,8 @@ public class CacheBuster {
     
     List<CacheBusterRule> rules = getRules();
     for(CacheBusterRule rule : rules){
-      if(rule.isEmpty(isCheckFileLastModifiedTime())){
-        if(isCheckFileLastModifiedTime()){
+      if(rule.isEmpty()){
+        if(rule.isCheckFileLastModifiedTime()){
           throw new BuildException("A <rule> tag should have a valid \"file\" attribute or a nested \"fileset\", " +
               "if \"checkFileLastModifiedTime\" is set to true in the <cacheBuster>.");
         }else{
@@ -61,8 +60,8 @@ public class CacheBuster {
 
       //if this is a file specific rule
       if(rule.getFile() != null){
-        if(isCheckFileLastModifiedTime()){
-          File ruleFile = rule.getFile();
+        File ruleFile = rule.getFile();
+        if(rule.isCheckFileLastModifiedTime()){
           CacheBusterPreference preference =
               new CacheBusterPreference(ruleFile.getPath(), ruleFile.lastModified(), versionText);
           if(getCacheBusterPreferencesFile().exists()){
@@ -79,6 +78,12 @@ public class CacheBuster {
               "This attribute can only be used in conjunction with the \"checkFileLastModifiedTime\" " +
               "attribute of the <cacheBuster> which is not enabled in your case.");  
         }
+
+        //set the version text to current one, if and existing file is modified
+        if(cacheBusterPreferences.get(ruleFile.getPath()).getLastModifiedTime() < ruleFile.lastModified()){
+          cacheBusterPreferences.get(ruleFile.getPath()).setVersion(versionText);
+        }
+        versionText = cacheBusterPreferences.get(rule.getFile().getPath()).getVersion();
       }
 
       String replaceFormat = rule.getTo().replaceAll(VERSION_FILE_TXT, versionText);
@@ -120,19 +125,11 @@ public class CacheBuster {
       Matcher urlPatternMatcher = rule.from.matcher(fileContent);
       //if a url pattern is found in the file, proceed further
       if(urlPatternMatcher.find()){
-        if(isCheckFileLastModifiedTime() &&
-           rule.getFile() != null &&
-           cacheBusterPreferences.get(rule.getFile().getPath()) != null &&
-           rule.getFile().lastModified() <= cacheBusterPreferences.get(rule.getFile().getPath()).getLastModifiedTime()
-        ){
-          CacheBusterPreference preference = cacheBusterPreferences.get(rule.getFile().getPath());
-          String replaceFormat = rule.getTo().replaceAll(VERSION_FILE_TXT, preference.getVersion());
-          fileContent = urlPatternMatcher.replaceAll(replaceFormat);
-        }else if(isVerbose()){
+        if(isVerbose()){
           caller.log("Match found in " + filePath + "; replacing all: " + rule.from.pattern());
           fileContent = urlPatternMatcher.replaceAll(rule.to);
+          streamModified = true;
         }
-        streamModified = true;
       }
     }
 
@@ -270,14 +267,6 @@ public class CacheBuster {
 
   public void setModifyOriginal(boolean modifyOriginal) {
     this.modifyOriginal = modifyOriginal;
-  }
-
-  public boolean isCheckFileLastModifiedTime() {
-    return checkFileLastModifiedTime;
-  }
-
-  public void setCheckFileLastModifiedTime(boolean checkFileLastModifiedTime) {
-    this.checkFileLastModifiedTime = checkFileLastModifiedTime;
   }
 
   public File getCacheBusterPreferencesFile() {

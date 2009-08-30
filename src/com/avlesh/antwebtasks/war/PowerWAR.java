@@ -87,7 +87,7 @@ public class PowerWAR extends War{
   }
 
   protected void cleanUp() {
-    if(cacheBuster != null && cacheBuster.isCheckFileLastModifiedTime()){
+    if(cacheBuster != null){
       Map<String, CacheBusterPreference> cacheBusterPreferences = new HashMap<String, CacheBusterPreference>();
       for(CacheBusterRule rule : cacheBuster.getRules()){
         if(rule.getFile() != null){

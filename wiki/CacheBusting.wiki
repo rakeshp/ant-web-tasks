@@ -9,4 +9,20 @@
 == What is cache busting? ==
 By cache, here I always mean HTTP Cache. HTTP Cache comes as a huge boon for performance. Clients (Browsers) typically store a copy of the HTTP Response and serve it from their caches unless instructed otherwise. In typical scenarios, this works very well. However, you run into a problem when you want to invalidate this cache. There are very few ways to achieve this. Cache Busting is one of the solutions to this problem in which a random string is appended to the HTTP Request URL, thereby "faking" an altogether new URL. The browser is forced to make a request as the URL itself has changed.
 
-The PowerWAR task of this Ant contribution lets you achieve this from the comfort of your build.xml file. 
+The PowerWAR task of this Ant contribution lets you achieve this from the comfort of your build.xml file. Underneath is a simple example -
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+
+    <cacheBuster verbose="on" versionFile="version.txt">
+      <fileset dir="web"/>
+      <rule from="/mysite/css/(.*).css" 
+              to="/mysite/css/(.*).css?random=%{version-file-txt}"/>
+    </cacheBuster>
+    
+    ...
+  </powerWar>
+</target>
+}}}
+As you must have noticed, a {{{<cacheBuster>}}} directive can be applied inside the PowerWAR task.

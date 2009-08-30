@@ -3,8 +3,8 @@
 
 == Introduction ==
  # [#What_is_cache_busting? What is cache busting?]
- # [#CacheBusting_Attributes !Cache Busting Attributes]
- # [#CacheBusting_Nested_Elements !Cache Busting Nested Elements]
+ # [#CacheBusting_Attributes Cache Busting Attributes]
+ # [#CacheBusting_Nested_Elements Cache Busting Nested Elements]
  # [#Cache_Busting_Samples Cache Busting Samples]
 
 == What is cache busting? ==

@@ -1,3 +1,5 @@
 #summary All in one, a powerful extension of the Ant WAR task.
 #labels Featured
-PowerWAR, as the name says :), is a powerful extension of [http://ant.apache.org/manual/CoreTasks/war.html Ant's WAR] task. Apart from everything that the original WAR task lets you do, PowerWAR adds capability to perform property-injection and cache-busting.
+PowerWAR, as the name says :), is a powerful extension of Ant's [http://ant.apache.org/manual/CoreTasks/war.html WAR task]. Apart from everything that the original WAR task lets you do, PowerWAR adds capability to perform property-injection and cache-busting.
+
+=What is property injection=

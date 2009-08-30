@@ -1,2 +1,3 @@
-#summary PowerWar - All in one powerful extension of the Ant WAR task.
+#summary PowerWAR - All in one powerful extension of the Ant WAR task.
 #labels Featured
+!PowerWAR, as the name says, is a powerful extension of Ant's WAR task. Apart from everything that the original WAR task lets you do, !PowerWAR adds capability to perform property-injection and cache-busting.

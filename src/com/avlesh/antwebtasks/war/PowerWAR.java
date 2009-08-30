@@ -6,7 +6,7 @@
 
 package com.avlesh.antwebtasks.war;
 
-import com.avlesh.antwebtasks.web.CacheBuster;
+import com.avlesh.antwebtasks.war.CacheBuster;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.War;
 import org.apache.tools.ant.util.FileUtils;
@@ -60,7 +60,7 @@ public class PowerWAR extends War{
     inject.init();
 
 //    if(cacheBuster != null){
-//      if(cacheBuster.isEmpty() && cacheBuster.verbose()){
+//      if(cacheBuster.isEmpty() && cacheBuster.verbose){
 //        log("No rules are specified for the <cacheBuster>. You need to specify <rule> tags within the <cacheBuster> " +
 //            "node, for which you want cache-busting to be applied");
 //      }else if(cacheBuster.getVersionFile() == null){
@@ -76,7 +76,7 @@ public class PowerWAR extends War{
 //        String versionText = getVersionText();
 //        cacheBuster.setVersionText(versionText);
 //        processRules();
-//        if(cacheBuster.verbose()){
+//        if(cacheBuster.verbose){
 //          log("Version text: \"" + versionText + "\" will be used in your cache busting rules.");
 //          log("Prepared all your cache-busting rules.");
 //        }

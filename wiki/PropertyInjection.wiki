@@ -13,7 +13,7 @@ Basic concepts related to property injection are explained [http://code.google.c
  <tr>
   <td width="100" valign="top" align="left">{{{fileset}}}</td>
   <td width="500" valign="top" align="left">{{{<fileset>}}} is a nested inner element for {{{inject}}} inside the {{{powerWar}}} task. Using this, you can specify group of files to which injection should be applied. {{{<fileset>}}} is a core Ant data-type. Find more details on using fileset here - http://ant.apache.org/manual/CoreTypes/fileset.html
-<br/><br/>Here's an example of applying injection to all ".xml" and ".properties" file inside the "web" directory minus the "web.xml" file.
+<br/>Here's an example of applying injection to all ".xml" and ".properties" file inside the "web" directory minus the "web.xml" file.
 {{{
 <inject verbose="on">
   <fileset dir="web">

@@ -36,7 +36,7 @@ The PowerWAR task of this Ant contribution lets you achieve this from the comfor
  </tr>
  <tr>
   <td width="100" valign="top" align="left">{{{versionFile}}}</td>
-  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement variable {{{%{version-file-txt`}`}}}.</td>
+  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement variable {{{ %{version-file-txt} }}}.</td>
   <td valign="top" align="left">Default: {{{none}}}<br/>Mandatory.</td>
  </tr>
 </table>

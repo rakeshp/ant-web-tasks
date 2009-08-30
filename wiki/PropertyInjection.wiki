@@ -24,7 +24,7 @@ Basic concepts related to property injection are explained [http://code.google.c
 </inject>
 }}}
  </td>
-  <td valign="top" align="left">Default: {{{none}}}, applies the inject directive to all the files in project's base directory being added to web archive.<br/>Note: You can specify multiple {{{<fileset>}}} based selectors for a single {{{inject}}} element.
+  <td valign="top" align="left">Default: {{{none}}}, applies the inject directive to all the files in project's base directory being added to web archive.<br/><br/>Note: You can specify multiple {{{<fileset>}}} based selectors for a single {{{inject}}} element.
   </td>
  </tr>
  <tr>

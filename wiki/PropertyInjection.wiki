@@ -16,11 +16,9 @@ Basic concepts related to property injection are explained [http://code.google.c
 <br/><br/>
 For example, if you may choose to keep the tokens in your file like this -
 {{{
-<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-  <property name="url">
-    <value>
-     jdbc:mysql://@__MYSQL.HOST__@:@__MYSQL.PORT__@/@__MYSQL.SCHEMA__@
-    </value>
+<bean id="foo">
+  <property name="dbHost">
+    <value>@__MYSQL.HOST__@</value>
   </property>
 </bean>
 }}}

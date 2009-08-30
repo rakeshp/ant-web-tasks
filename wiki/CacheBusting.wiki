@@ -5,3 +5,8 @@
  # [#What_is_cache_busting? What is cache busting?]
  # [#Attributes_and_Nested_Elements Attributes and Nested Elements]
  # [#Cache_Busting_Samples Cache Busting Samples]
+
+== What is cache busting? ==
+By cache, here I always mean HTTP Cache. HTTP Cache comes as a huge boon for performance. Clients (Browsers) typically store a copy of the HTTP Response and serve it from their caches unless instructed otherwise. In typical scenarios, this works very well. However, you run into a problem when you want to invalidate this cache. There are very few ways to achieve this. Cache Busting is one of the solutions to this problem in which a random string is appended to the HTTP Request URL, thereby "faking" an altogether new URL. The browser is forced to make a request as the URL itself has changed.
+
+The PowerWAR task of this Ant contribution lets you achieve this from the comfort of your build.xml file. 

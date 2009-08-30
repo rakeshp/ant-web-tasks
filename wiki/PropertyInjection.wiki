@@ -6,25 +6,15 @@ Basic concepts related to property injection are explained [http://code.google.c
 == Inject Attributes ==
 <table cellspacing="1" cellpadding="1" border="1" width="600">
  <tr>
-  <td width="100" valign="top" align="left">
-   <b>Attribute</b>
-  </td>
-  <td width="250" valign="top" align="left">
-   <b>Description</b>
-  </td>
-  <td width="250" valign="top" align="left">
-    <b>Remarks</b>
-  </td>
+  <td width="100" valign="top" align="left"><b>Attribute</b></td>
+  <td width="250" valign="top" align="left"><b>Description</b></td>
+  <td width="250" valign="top" align="left"><b>Remarks</b></td>
  </tr>
  <tr>
-  <td width="100" valign="top" align="left">
-   {{{patternPrefix}}}
-  </td>
-  <td width="250" valign="top" align="left">
-    The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these properties in your files.
-  </td>
-  <td width="250" valign="top" align="left">
-   Default: ${
-  </td>
+  <td width="100" valign="top" align="left">{{{patternPrefix}}}</td>
+  <td width="250" valign="top" align="left">The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these property names in your files.
+<br/><br/>
+  For </td>
+  <td width="250" valign="top" align="left">Default: ${</td>
  </tr>
 </table>

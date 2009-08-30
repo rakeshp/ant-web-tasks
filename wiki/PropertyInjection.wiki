@@ -1,5 +1,9 @@
 #summary Attributes and samples on how to use the Injector inside PowerWAR
 #labels Featured
+== Introduction ==
+ # [#What_is_property_injection? What is property injection?]
+ # [#Attributes_and_Nested_Elements Attributes and Nested Elements]
+ # [#Inject_Samples Inject Samples]
 
 == What is property injection? ==
 Simply put, an attempt to resolve ANT build time properties names in specified files and replace these with their corresponding values.
@@ -49,7 +53,7 @@ While performing your WAR operation, you can instruct {{{<powerWar>}}} to {{{inj
   </powerWar>
 </target>
 }}}
-The best part with PowerWAR's inject is that it does not alter the state of your file; meaning your file does not get modified. Since PowerWAR is an extension of the War task, which essentially extends an archive task, PowerWAR has access to the archiving operation. When the WAR task tries to archive your file, PowerWAR kick in tries to find a replaceable property in the file. If it finds one, the file's !InputStream is modified (after replacing the property with its corresponding value) and sent to the archive operation. <b>[PropertyInjection Injection attributes and samples]</b>
+The best part with PowerWAR's inject is that it does not alter the state of your file; meaning your file does not get modified. Since PowerWAR is an extension of the War task, which essentially extends an archive task, PowerWAR has access to the archiving operation. When the WAR task tries to archive your file, PowerWAR kick in tries to find a replaceable property in the file. If it finds one, the file's !InputStream is modified (after replacing the property with its corresponding value) and sent to the archive operation.
 
 == Attributes and Nested Elements ==
 <table cellspacing="0" cellpadding="10" border="1" width="800">
@@ -110,3 +114,6 @@ your {{{patternPrefix}}} attribute should be specified as "{{{@__}}}"</td>
  <td width="200" valign="top" align="left">Default: {{{true}}}</td>
 </tr>
 </table>
+
+== Inject Samples ==
+Foo

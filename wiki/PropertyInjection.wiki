@@ -116,4 +116,93 @@ your {{{patternPrefix}}} attribute should be specified as "{{{@__}}}"</td>
 </table>
 
 == Inject Samples ==
-Foo
+<br/><br/><b>Inject any build property in any file</b>
+<br/>This is the most minimal (and also the most time consuming) usage of the {{{<inject>}}} directive inside {{{<powerWar>}}} task.
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+    <!-- 
+       Replaces all ${BUILD.PROPERTY.NAME} occurrences in the files
+       that are being archived by the underlying "war" target. 
+       
+       Note: In this usage, the original files are not modified. Only the file's
+       InputStream is changed.
+    -->
+    <inject verbose="on"/>
+
+    <classes dir="${build.dir}/classes"/>
+    <lib dir="${lib.dir}">
+      <include name="*.jar" />
+    </lib>
+    <fileset dir="web">
+      <exclude name="**/web.xml" />
+    </fileset>
+  </powerWar>
+</target>
+}}}
+<br/>
+<b>Inject any build property in a group of files</b>
+<br/>This a more efficient usage of {{{<inject>}}}. You can use Ant's core data-type {{{<fileset>}}} to specify the file groups. More on {{{<fileset>}}} [http://ant.apache.org/manual/CoreTypes/fileset.html here].
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+    <!-- 
+       Replaces all ${BUILD.PROPERTY.NAME} inside all ".xml" and ".properties"
+       files in the "web" directory minus the "web.xml" file. 
+       
+       Note:
+       1. You can specify multiple <fileset> elements inside a single inject. 
+       2. In this usage, the original files are not modified. Only the file's
+          InputStream is changed.
+    -->
+    <inject verbose="on">
+      <fileset dir="web">
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+        <exclude name="**/web.xml" />
+      </fileset>
+    </inject>
+
+    <classes dir="${build.dir}/classes"/>
+    <lib dir="${lib.dir}">
+      <include name="*.jar" />
+    </lib>
+    <fileset dir="web">
+      <exclude name="**/web.xml" />
+    </fileset>
+  </powerWar>
+</target>
+}}}
+<br/>
+<b>Inject pre-defined properties in a group of files</b>
+<br/>The injector, by default, replaces all the properties which can be resolved via Ant's property map. Ant prepares a global list of all properties including System properties, properties declared by you during the build process and properties read from your build property files (imported using {{{<property file="/my/build/file.properties"/>}}}). The good news is that you can use any of these in your files. 
+<br/><br/>However, if this is not desired, and you wish to have a very separate and distinct list of properties to use, put them in a java properties files (key/value pairs) and pass the file name in this attribute.
+<br/>
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+    <!-- 
+       Replaces all ${BUILD.PROPERTY.NAME} 
+       only specified in the "inject.properties" file. 
+    -->
+    <inject verbose="on" injectionPropertyFile="inject.properties">
+      <fileset dir="web">
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+        <exclude name="**/web.xml" />
+      </fileset>
+    </inject>
+
+    <classes dir="${build.dir}/classes"/>
+    <lib dir="${lib.dir}">
+      <include name="*.jar" />
+    </lib>
+    <fileset dir="web">
+      <exclude name="**/web.xml" />
+    </fileset>
+  </powerWar>
+</target>
+}}}

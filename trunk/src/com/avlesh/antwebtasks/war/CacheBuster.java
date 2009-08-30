@@ -1,139 +1,235 @@
 package com.avlesh.antwebtasks.war;
 
-import org.apache.tools.ant.util.FileUtils;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.io.*;
 import com.avlesh.antwebtasks.util.WebAntUtil;
-import com.avlesh.antwebtasks.war.PowerWAR;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
 
 public class CacheBuster {
+  protected Project project;
+  protected Task caller;
   protected File versionFile;
+  protected boolean createVersionFileIfNotExists = true;
+  protected boolean autoIncrementVersionNumber = false;
   protected String versionPropertyKey;
-  protected String versionText;
-  protected List<Pattern> includes = new ArrayList<Pattern>();
   protected boolean verbose = true;
-  protected boolean modifyOriginalFile = false;
+  protected boolean modifyOriginal = false;
   protected boolean checkFileLastModifiedTime = false;
   protected File cacheBusterPreferencesFile = new File(".cache-buster.pref");
-  protected List<Rule> rules = new ArrayList<Rule>();
+  protected List<CacheBusterRule> rules = new ArrayList<CacheBusterRule>();
+  protected List<FileSet> fileSets = new ArrayList<FileSet>();
 
-  public InputStream doCacheBusting(InputStream in, String vPath, PowerWAR task) throws IOException{
-    String fileContent = WebAntUtil.getContentFromStream(in);
-    if(fileContent != null) {
-      fileContent = performReplace(vPath, task, fileContent);
-      in = new ByteArrayInputStream(fileContent.getBytes());
-    }
-    return in;
+  private List<String> filesToApplyCacheBustingRules = new ArrayList<String>();
+  private Map<String, CacheBusterPreference> cacheBusterPreferences = new HashMap<String, CacheBusterPreference>();
+  private String versionData = null;
+
+  protected static final String VERSION_FILE_TXT = "%\\{version-file-txt\\}";
+
+  public CacheBuster(Project project){
+    this.project = project;
   }
 
-  public boolean doCacheBusting(File file, String vPath, PowerWAR task) throws IOException {
-    boolean fileModified = false;
-    String fileContent = FileUtils.readFully(new FileReader(file));
-    if(fileContent != null) {
-      String replacedFileContent = performReplace(vPath, task, fileContent);
-      //if a replace happend, override the file contents with the new data
-      if(!fileContent.equals(replacedFileContent)) {
-        FileWriter fileWriter = new FileWriter(file);
-        fileWriter.write(replacedFileContent);
-        fileWriter.flush();
-        fileWriter.close();
-        fileModified = true;
-      }
+  protected final void init(){
+    if(getVersionFile() == null){
+      throw new BuildException("\"versionFile\" is a required attribute in the <cacheBuster> tag. " +
+          "Your cache-busting rules cannot be applied without this file");
+    }else if(!getVersionFile().exists() && !isCreateVersionFileIfNotExists()){
+      throw new BuildException("The \"versionFile\" " + versionFile.getPath() + " does not exist." +
+      " Set \"createVersionFileIfNotExists\" attribute to true or create the file manually.");
     }
-    return fileModified;
-  }
 
-  private String performReplace(String vPath, PowerWAR task, String fileContent) {
-    for(Rule rule : rules) {
-      Matcher urlPatternMatcher = rule.urlPattern.matcher(fileContent);
-      //if a url pattern is found in the file, proceed further
-      if(urlPatternMatcher.find()) {
-        task.log("Match found in " + vPath + "; replacing all: " + rule.urlPattern.pattern());
-        fileContent = urlPatternMatcher.replaceAll(rule.replaceFormat);
-      }
+    String versionText = getVersionText();
+    if(isVerbose()){
+      caller.log("Appending the version text \"" + versionText + "\" to all your cache-busting rules");
     }
-    return fileContent;
-  }
-
-  public boolean shouldDoCacheBustingForFile(String vPath){
-    boolean matchesAnIncludePattern = includes.isEmpty();
-    if(!includes.isEmpty()){
-      for(Pattern includePattern : includes){
-        Matcher matcher = includePattern.matcher(vPath);
-        if(matcher.find()){
-          matchesAnIncludePattern = true;
-          break;
+    
+    List<CacheBusterRule> rules = getRules();
+    for(CacheBusterRule rule : rules){
+      if(rule.isEmpty(isCheckFileLastModifiedTime())){
+        if(isCheckFileLastModifiedTime()){
+          throw new BuildException("A <rule> tag should have a valid \"file\" attribute or a nested \"fileset\", " +
+              "if \"checkFileLastModifiedTime\" is set to true in the <cacheBuster>.");
+        }else{
+          throw new BuildException("A <rule> tag, inside cache-buster, without " +
+              "\"from\" or \"to\" attributes is considered invalid.");
         }
       }
+
+      //if this is a file specific rule
+      if(rule.getFile() != null){
+        if(isCheckFileLastModifiedTime()){
+          File ruleFile = rule.getFile();
+          CacheBusterPreference preference =
+              new CacheBusterPreference(ruleFile.getPath(), ruleFile.lastModified(), versionText);
+          if(getCacheBusterPreferencesFile().exists()){
+            cacheBusterPreferences = CacheBusterPreference.getPreferencesFromFile(getCacheBusterPreferencesFile());
+            //add a new kid on the block
+            if(!cacheBusterPreferences.containsKey(ruleFile.getPath())){
+              cacheBusterPreferences.put(ruleFile.getPath(), preference);
+            }
+          }else{
+            cacheBusterPreferences.put(ruleFile.getPath(), preference);
+          }
+        }else{
+          caller.log("You have specified \"file\" attribute for the rule \"" + rule.getFrom().pattern() + "\". " +
+              "This attribute can only be used in conjunction with the \"checkFileLastModifiedTime\" " +
+              "attribute of the <cacheBuster> which is not enabled in your case.");  
+        }
+      }
+
+      String replaceFormat = rule.getTo().replaceAll(VERSION_FILE_TXT, versionText);
+      rule.setTo(replaceFormat);
     }
-    return matchesAnIncludePattern;
+
+    for(FileSet fileSet : this.fileSets){
+      File baseDirForThisFileSet = fileSet.getDir(this.project);
+      String[] includedFilesInThisFileSet = fileSet.getDirectoryScanner(this.project).getIncludedFiles();
+      for(String fileInThisFileSet : includedFilesInThisFileSet){
+        this.filesToApplyCacheBustingRules.add(new File(baseDirForThisFileSet, fileInThisFileSet).getPath());
+      }
+    }
   }
 
-  public boolean isEmpty(){
-    return rules.isEmpty();
+  public InputStream doCacheBusting(InputStream in, String filePath) throws IOException{
+    CacheBustingResponse response = performCacheBusting(in, filePath);
+    return response.finalStream;
   }
 
-  public Rule createRule() {
-    return new Rule();
+  public File doCacheBusting(File file) throws IOException {
+    InputStream in = new FileInputStream(file);
+    CacheBustingResponse response = performCacheBusting(in, file.getPath());
+    in.close();
+    if(response.isModified){
+      String modifiedFileContent = response.finalContent;
+      FileWriter writer = new FileWriter(file);
+      writer.write(modifiedFileContent);
+      writer.close();
+      file = new File(file.getPath());
+    }
+    return file;
   }
 
-  public void addRule(Rule rule){
-    this.rules.add(rule);
+  private CacheBustingResponse performCacheBusting(InputStream in, String filePath) throws IOException {
+    boolean streamModified = false;
+    String fileContent = WebAntUtil.getContentFromStream(in);
+    for(CacheBusterRule rule : rules){
+      Matcher urlPatternMatcher = rule.from.matcher(fileContent);
+      //if a url pattern is found in the file, proceed further
+      if(urlPatternMatcher.find()){
+        if(isCheckFileLastModifiedTime() &&
+           rule.getFile() != null &&
+           cacheBusterPreferences.get(rule.getFile().getPath()) != null &&
+           rule.getFile().lastModified() <= cacheBusterPreferences.get(rule.getFile().getPath()).getLastModifiedTime()
+        ){
+          CacheBusterPreference preference = cacheBusterPreferences.get(rule.getFile().getPath());
+          String replaceFormat = rule.getTo().replaceAll(VERSION_FILE_TXT, preference.getVersion());
+          fileContent = urlPatternMatcher.replaceAll(replaceFormat);
+        }else if(isVerbose()){
+          caller.log("Match found in " + filePath + "; replacing all: " + rule.from.pattern());
+          fileContent = urlPatternMatcher.replaceAll(rule.to);
+        }
+        streamModified = true;
+      }
+    }
+
+    in = new ByteArrayInputStream(fileContent.getBytes());
+    return new CacheBustingResponse(in, fileContent, streamModified);
   }
 
-  public static class Rule {
-    protected File file;
-    protected Pattern urlPattern;
-    protected String replaceFormat;
-    protected String initialUrlPattern;
+  public boolean shouldCacheBust(File file){
+    return this.filesToApplyCacheBustingRules.isEmpty() || this.filesToApplyCacheBustingRules.contains(file.getPath());
+  }
 
-    public boolean isEmpty(CacheBuster cacheBuster){
-      boolean isEmpty;
-      if(!cacheBuster.isCheckFileLastModifiedTime()){
-        isEmpty = (urlPattern == null || replaceFormat == null);
+  protected String getVersionText(){
+    if(versionData == null){
+      File versionFile = getVersionFile();
+      if(!versionFile.exists()){
+        try{
+          versionFile.createNewFile();
+          FileWriter fileWriter = new FileWriter(versionFile);
+          fileWriter.write(String.valueOf(0));
+          fileWriter.flush();
+          fileWriter.close();
+          versionFile = new File(versionFile.getPath());
+        }catch(Exception ex){
+          throw new BuildException("Error creating version file. Skipping ...");
+        }
+      }
+
+      if(getVersionPropertyKey() != null){
+        Properties properties = new Properties();
+        try{
+          properties.load(new FileInputStream(getVersionFile()));
+        }catch(Exception ex){
+          throw new BuildException("Error reading your version property file: " + getVersionFile().getPath());
+        }
+        versionData = properties.getProperty(getVersionPropertyKey());
+        if(versionData == null || "".equals(versionData.trim())){
+          throw new BuildException("Your version file: " + getVersionFile().getPath() + " does not " +
+              "contain any version data against the property: " + getVersionPropertyKey() + ". " +
+              "Please check your version file. Skipping all your cache busting rules ...");
+        }
       }else{
-        isEmpty = (file == null || urlPattern == null || replaceFormat == null);
+        int lastVersionNumber = 0;
+        boolean isNumericString = true;
+        try{
+          FileReader fr = new FileReader(versionFile);
+          String currentFileContent = WebAntUtil.readFully(fr);
+          fr.close();
+          lastVersionNumber = Integer.parseInt(currentFileContent);
+        }catch(Exception ex){
+          //nothing to worry about
+          isNumericString = false;
+        }
+
+        try{
+          if(isAutoIncrementVersionNumber()){
+            if(isNumericString){
+              lastVersionNumber++;
+              FileWriter fileWriter = new FileWriter(versionFile);
+              fileWriter.write(String.valueOf(lastVersionNumber));
+              fileWriter.flush();
+              fileWriter.close();
+              versionFile = new File(versionFile.getPath());
+            }
+          }
+
+          FileReader fr = new FileReader(versionFile);
+          versionData = WebAntUtil.readFully(fr);
+          fr.close();
+        }catch(IOException ex){
+          throw new BuildException("Error writing to your version file: " + getVersionFile().getAbsolutePath());
+        }
+
+        if(versionData == null || "".equals(versionData.trim())){
+          throw new BuildException("Your version file: " + getVersionFile().getAbsolutePath() + " does not " +
+              "contain any version data. Please check your version file. Skipping all your cache busting rules ...");
+        }
       }
-      return isEmpty;
-    }
 
-    public File getFile() {
-      return file;
+      versionData = versionData.trim();
     }
+    return versionData;
+  }
 
-    public Pattern getUrlPattern() {
-      return urlPattern;
-    }
+  public void addFileset(FileSet fileSet){
+    this.fileSets.add(fileSet);
+  }
 
-    public String getReplaceFormat() {
-      return replaceFormat;
-    }
+  public FileSet createFileset() {
+    return new FileSet();
+  }
 
-    public void setFile(File file) {
-      this.file = file;
-    }
+  public CacheBusterRule createRule() {
+    return new CacheBusterRule();
+  }
 
-    public void setReplaceFormat(String replaceFormat) {
-      this.replaceFormat = replaceFormat;  
-    }
-
-    public void setUrlPattern(String urlPattern) {
-      initialUrlPattern = urlPattern;
-      if(urlPattern != null && !"".equals(urlPattern.trim())){
-        this.urlPattern = Pattern.compile(urlPattern);
-      }
-    }
-
-    public String getInitialUrlPattern() {
-      return initialUrlPattern;
-    }
-
-    public void setInitialUrlPattern(String initialUrlPattern) {
-      this.initialUrlPattern = initialUrlPattern;
-    }
+  public void addRule(CacheBusterRule rule){
+    this.rules.add(rule);
   }
 
   public File getVersionFile() {
@@ -144,19 +240,6 @@ public class CacheBuster {
     this.versionFile = versionFile;
   }
 
-  public List<Pattern> getIncludes() {
-    return includes;
-  }
-
-  public void setIncludes(String includes) {
-    if(includes != null){
-      String[] includedFiles = includes.split("\\s*,\\s*");
-      for(String includedFile : includedFiles){
-        this.includes.add(Pattern.compile(includedFile));
-      }
-    }
-  }
-
   public boolean isVerbose() {
     return verbose;
   }
@@ -165,11 +248,11 @@ public class CacheBuster {
     this.verbose = verbose;
   }
 
-  public List<Rule> getRules() {
+  public List<CacheBusterRule> getRules() {
     return rules;
   }
 
-  public void setRules(List<Rule> rules) {
+  public void setRules(List<CacheBusterRule> rules) {
     this.rules = rules;
   }
 
@@ -181,20 +264,12 @@ public class CacheBuster {
     this.versionPropertyKey = versionPropertyKey;
   }
 
-  public String getVersionText() {
-    return versionText;
+  public boolean isModifyOriginal() {
+    return modifyOriginal;
   }
 
-  public void setVersionText(String versionText) {
-    this.versionText = versionText;
-  }
-
-  public boolean isModifyOriginalFile() {
-    return modifyOriginalFile;
-  }
-
-  public void setModifyOriginalFile(boolean modifyOriginalFile) {
-    this.modifyOriginalFile = modifyOriginalFile;
+  public void setModifyOriginal(boolean modifyOriginal) {
+    this.modifyOriginal = modifyOriginal;
   }
 
   public boolean isCheckFileLastModifiedTime() {
@@ -211,5 +286,73 @@ public class CacheBuster {
 
   public void setCacheBusterPreferencesFile(File cacheBusterPreferencesFile) {
     this.cacheBusterPreferencesFile = cacheBusterPreferencesFile;
+  }
+
+  public Project getProject() {
+    return project;
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
+  }
+
+  public Task getCaller() {
+    return caller;
+  }
+
+  public void setCaller(Task caller) {
+    this.caller = caller;
+  }
+
+  public boolean isCreateVersionFileIfNotExists() {
+    return createVersionFileIfNotExists;
+  }
+
+  public void setCreateVersionFileIfNotExists(boolean createVersionFileIfNotExists) {
+    this.createVersionFileIfNotExists = createVersionFileIfNotExists;
+  }
+
+  public boolean isAutoIncrementVersionNumber() {
+    return autoIncrementVersionNumber;
+  }
+
+  public void setAutoIncrementVersionNumber(boolean autoIncrementVersionNumber) {
+    this.autoIncrementVersionNumber = autoIncrementVersionNumber;
+  }
+
+  public List<FileSet> getFileSets() {
+    return fileSets;
+  }
+
+  public void setFileSets(List<FileSet> fileSets) {
+    this.fileSets = fileSets;
+  }
+
+  public List<String> getFilesToApplyCacheBustingRules() {
+    return filesToApplyCacheBustingRules;
+  }
+
+  public void setFilesToApplyCacheBustingRules(List<String> filesToApplyCacheBustingRules) {
+    this.filesToApplyCacheBustingRules = filesToApplyCacheBustingRules;
+  }
+
+  public Map<String, CacheBusterPreference> getCacheBusterPreferences() {
+    return cacheBusterPreferences;
+  }
+
+  public void setCacheBusterPreferences(Map<String, CacheBusterPreference> cacheBusterPreferences) {
+    this.cacheBusterPreferences = cacheBusterPreferences;
+  }
+
+  private class CacheBustingResponse{
+    protected InputStream finalStream;
+    protected boolean isModified;
+    protected String finalContent;
+
+    private CacheBustingResponse(InputStream finalStream, String finalContent, boolean modified) {
+      this.finalStream = finalStream;
+      this.isModified = modified;
+      this.finalContent = finalContent;
+    }
   }
 }

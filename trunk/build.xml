@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="ant-web-tasks" basedir="." default="help">
+  <property environment="env"/>
+  <property name="java-src.dir" value="src" />
+  <property name="build.dir" value="build" />
+  <property name="distribution.dir" value="dist" />
+
+  <path id="compile.classpath">
+    <fileset dir="${env.ANT_HOME}/lib">
+      <include name="*.jar" />
+    </fileset>
+    <pathelement path="${build.dir}/classes" />
+  </path>                           
+
+  <target name="jar" depends="compile" description="packages up the class files into jar files">
+    <property name="archive.target" value="${build.dir}/we-love-ant.jar" />
+    <jar destfile="${archive.target}" basedir="${build.dir}/classes" includes="**" />
+    <copy file="${build.dir}/we-love-ant.jar" tofile="D:\Projects\AskMe\Askme-WWW\build-only\ant-web-tasks.jar"/>
+  </target>
+
+  <target name="compile" description="Compile main source tree java files">
+    <mkdir dir="${build.dir}/classes" />
+    <javac destdir="${build.dir}/classes" debug="true" optimize="false" deprecation="false" failonerror="true">
+      <src path="${java-src.dir}" />
+      <classpath refid="compile.classpath" />
+    </javac>
+  </target>
+
+  <target name="clean" description="Clean output directories">
+    <delete dir="${build.dir}" />
+    <delete dir="${distribution.dir}" failonerror="false"/>
+  </target>
+
+  <target name="help" description="Prints all available targets and instructions to use them">
+  </target>
+</project>

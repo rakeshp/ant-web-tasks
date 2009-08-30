@@ -1,5 +1,8 @@
 #summary Attributes and samples on how to use the Injector inside PowerWAR
 #labels Featured
 
-== Introduction ==
-The basic concepts are explained [http://code.google.com/p/ant-web-tasks/wiki/PowerWar#What_is_property_injection? here].
+Basic concepts related to property injection are explained [http://code.google.com/p/ant-web-tasks/wiki/PowerWar#What_is_property_injection? here]. 
+
+== Property Injector Attribute ==
+|| <b>attribute</b> || <b>description</b> || <b>remarks</b> ||
+|| {{{patternPrefix}}} || hurray || furray || 

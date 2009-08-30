@@ -1,4 +1,4 @@
-#summary Attributes and samples on how to use the cacheBuster inside PowerWAR
+#summary Attributes and samples on how to use the <cacheBuster> inside PowerWAR
 #labels Featured
 
 = Introduction =

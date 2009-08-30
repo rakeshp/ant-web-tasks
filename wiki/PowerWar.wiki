@@ -4,7 +4,8 @@ PowerWAR, as the name says :), is a powerful extension of Ant's [http://ant.apac
 
 == What is property injection? ==
 Simply put, an attempt to resolve ANT build time properties names in specified files and replace these with their corresponding values.
-As an example, lets say you have a file 
+<br/>
+For an example, lets say you have a file 
 WEB-INF/some-application-property.xml which has this content -
 {{{
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -22,3 +23,6 @@ WEB-INF/some-application-property.xml which has this content -
  </property>
 </bean>
 }}}
+${MYSQL.USER} and the likes are nothing but fancy placeholders. If there is a build property called "MYSQL.USER" defined in Ant, then this token will get replaced with the corresponding value.
+<br/>
+See how -

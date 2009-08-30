@@ -35,9 +35,8 @@ The PowerWAR task of this Ant contribution lets you achieve this from the comfor
   <td width="200" valign="top" align="left"><b>Remarks</b></td>
  </tr>
  <tr>
-  <td width="100" valign="top" align="left">{{{fileset}}}</td>
-  <td width="500" valign="top" align="left">{{{<fileset>}}} is a nested inner element for {{{inject}}} inside the {{{powerWar}}} task. Using this, you can specify group of files to which injection should be applied. {{{<fileset>}}} is a core Ant data-type. Find more details on using fileset here - http://ant.apache.org/manual/CoreTypes/fileset.html
-<br/><br/>Here's an example of applying injection to all ".xml" and ".properties" file inside the "web" directory minus the "web.xml" file.
+  <td width="100" valign="top" align="left">{{{versionFile}}}</td>
+  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement varaible %{version-file-txt}. 
 {{{
 <inject verbose="on">
   <fileset dir="web">

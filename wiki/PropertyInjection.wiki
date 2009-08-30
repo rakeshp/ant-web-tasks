@@ -4,7 +4,7 @@
 Basic concepts related to property injection are explained [http://code.google.com/p/ant-web-tasks/wiki/PowerWar#What_is_property_injection? here]. 
 
 == Inject Attributes ==
-<table cellspacing="0" cellpadding="2" border="1" width="800">
+<table cellspacing="0" cellpadding="10" border="1" width="800">
  <tr>
   <td width="100" valign="top" align="left"><b>Attribute</b></td>
   <td width="500" valign="top" align="left"><b>Description</b></td>

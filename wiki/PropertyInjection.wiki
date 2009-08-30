@@ -22,8 +22,12 @@ For example, if you may choose to keep the tokens in your file like this -
   </property>
 </bean>
 }}}
-In this case, your {{{patternPrefix}}} is "{{{@__}}}"
-</td>
-  <td width="250" valign="top" align="left">Default: ${</td>
- </tr>
+In this case, your {{{patternPrefix}}} attribute should be specified as "{{{@__}}}"</td>
+ <td width="250" valign="top" align="left">Default: ${</td>
+</tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{patternSuffix}}}</td>
+  <td width="250" valign="top" align="left">Look for the description above. In the sample provided, {{{patternSuffix}}} should be specified as "{{{__@}}}"</td>
+ <td width="250" valign="top" align="left">Default: }</td>
+</tr>
 </table>

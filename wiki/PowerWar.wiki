@@ -9,19 +9,16 @@ WEB-INF/some-application-property.xml which has this content -
 {{{
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
  <property name="driverClassName">
-  <value>${web.jdbc.driverClassName}</value>
+  <value>com.mysql.jdbc.Driver</value>
  </property>
  <property name="url">
-  <value>${web.jdbc.url}</value>
+  <value>jdbc:mysql://${MYSQL.HOST}:${MYSQL.PORT}/${MYSQL.SCHEMA}</value>
  </property>
  <property name="username">
-  <value>${web.jdbc.username}</value>
+  <value>${MYSQL.USER}</value>
  </property>
  <property name="password">
-  <value>${web.jdbc.password}</value>
- </property>
- <property name="initialSize">
-  <value>4</value>
+  <value>${MYSQL.PASSWORD}</value>
  </property>
 </bean>
 }}}

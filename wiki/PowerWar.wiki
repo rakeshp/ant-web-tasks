@@ -18,7 +18,7 @@ To begin with, first download the latest binary, and change your WAR task's usag
   </powerWar>
 </target>
 }}}
-As you might have noticed, other than the task name nothing has really changed. Well, not really ... we are yet to discover the functionlities that <powerWar> has to offer in the subsequent sections.
+As you might have noticed, other than the task name nothing has really changed. Well, not really ... we are yet to discover the functionlities that {{{<powerWar>}}} has to offer in the subsequent sections.
 
 == What is property injection? ==
 Simply put, an attempt to resolve ANT build time properties names in specified files and replace these with their corresponding values.

@@ -70,4 +70,4 @@ While performing your WAR operation, you can instruct {{{<powerWar>}}} to {{{inj
 </target>
 }}}
 The best part with PowerWAR's inject is that it does not alter the state of your file; meaning your file does not get modified. Since PowerWAR is an extension of the War task, which essentially extends an archive task, PowerWAR has access to the archiving operation. When the WAR task tries to archive your file, PowerWAR kick in tries to find a replaceable property in the file. If it finds one, the file's InputStream is modified (after replacing the property with its corresponding value) and sent to the archive operation.
-==== [PropertyInjection Learn more] ====
+==== [PropertyInjection Injection attributes and samples] ====

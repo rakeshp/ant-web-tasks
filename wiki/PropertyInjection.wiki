@@ -18,7 +18,9 @@ For example, if you may choose to keep the tokens in your file like this -
 {{{
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
   <property name="url">
-    <value>jdbc:mysql://@__MYSQL.HOST__@:@__MYSQL.PORT__@/@__MYSQL.SCHEMA__@</value>
+    <value>
+     jdbc:mysql://@__MYSQL.HOST__@:@__MYSQL.PORT__@/@__MYSQL.SCHEMA__@
+    </value>
   </property>
 </bean>
 }}}

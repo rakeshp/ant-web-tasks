@@ -14,7 +14,7 @@ Basic concepts related to property injection are explained [http://code.google.c
   <td width="100" valign="top" align="left">{{{path}}}</td>
   <td width="500" valign="top" align="left">Use it in this way.</td>
   <td>Default: all files in the base dir</td>
- </td>
+ </tr>
  <tr>
   <td width="100" valign="top" align="left">{{{patternPrefix}}}</td>
   <td width="500" valign="top" align="left">The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these property names in your files.

@@ -1,6 +1,8 @@
 #summary All in one, a powerful extension of the Ant WAR task.
 #labels Featured
-PowerWAR, as the name says :), is a powerful extension of Ant's [http://ant.apache.org/manual/CoreTasks/war.html WAR task]. Apart from everything that the original WAR task lets you do, PowerWAR adds capability to perform property-injection and cache-busting. To begin with, first download the latest binary, and change your WAR task's usage as below
+PowerWAR, as the name says :), is a powerful extension of Ant's [http://ant.apache.org/manual/CoreTasks/war.html WAR task]. Apart from everything that the original WAR task lets you do, PowerWAR adds capability to perform property-injection and cache-busting. 
+<br/><br/>
+To begin with, first download the latest binary, and change your WAR task's usage as below
 {{{
 <taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
 <target name="my-war-target">
@@ -16,6 +18,7 @@ PowerWAR, as the name says :), is a powerful extension of Ant's [http://ant.apac
   </powerWar>
 </target>
 }}}
+As you might have noticed, other than the task name nothing has really changed. Well, not really ... we are yet to discover the functionlities that <powerWar> has to offer in the subsequent sections.
 
 == What is property injection? ==
 Simply put, an attempt to resolve ANT build time properties names in specified files and replace these with their corresponding values.

@@ -4,7 +4,7 @@
 Basic concepts related to property injection are explained [http://code.google.com/p/ant-web-tasks/wiki/PowerWar#What_is_property_injection? here]. 
 
 == Inject Attributes ==
-<table cellspacing="1" cellpadding="1" border="1" width="600">
+<table cellspacing="2" cellpadding="2" border="1" width="600">
  <tr>
   <td width="100" valign="top" align="left"><b>Attribute</b></td>
   <td width="250" valign="top" align="left"><b>Description</b></td>
@@ -14,7 +14,16 @@ Basic concepts related to property injection are explained [http://code.google.c
   <td width="100" valign="top" align="left">{{{patternPrefix}}}</td>
   <td width="250" valign="top" align="left">The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these property names in your files.
 <br/><br/>
-  For </td>
+For example, if you may choose to keep the tokens in your file like this -
+{{{
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+  <property name="url">
+    <value>jdbc:mysql://@__MYSQL.HOST__@:@__MYSQL.PORT__@/@__MYSQL.SCHEMA__@</value>
+  </property>
+</bean>
+}}}
+In this case, your {{{patternPrefix}}} is "@__"
+</td>
   <td width="250" valign="top" align="left">Default: ${</td>
  </tr>
 </table>

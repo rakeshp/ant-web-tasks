@@ -52,11 +52,9 @@ While performing your WAR operation, you can instruct {{{<powerWar>}}} to {{{inj
      For other possible attributes, go here
     -->
     <inject verbose="on">
-      <path>
-       <fileset dir="web>
-         <include name="WEB-INF/some-application-property.xml"/>
-       </fileset>
-      </path>
+      <fileset dir="web>
+        <include name="WEB-INF/some-application-property.xml"/>
+      </fileset>
     </inject>
 
     <classes dir="${build.dir}/classes"/>

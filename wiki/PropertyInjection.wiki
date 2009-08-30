@@ -3,6 +3,6 @@
 
 Basic concepts related to property injection are explained [http://code.google.com/p/ant-web-tasks/wiki/PowerWar#What_is_property_injection? here]. 
 
-== Property Injector Attribute ==
+== Inject Attributes ==
 || <b>attribute</b> || <b>description</b> || <b>remarks</b> ||
-|| {{{patternPrefix}}} || hurray || furray || 
+|| {{{patternPrefix}}} || The injector replaces all ${BUILD.PROPERTY.NAME} style properties by default. However, you may choose to have different patterns for these properties in your files. || Default: <b>${</b> || 

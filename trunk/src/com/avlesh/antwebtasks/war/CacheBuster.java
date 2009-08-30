@@ -1,4 +1,4 @@
-package com.avlesh.antwebtasks.web;
+package com.avlesh.antwebtasks.war;
 
 import org.apache.tools.ant.util.FileUtils;
 import java.util.List;
@@ -10,15 +10,15 @@ import com.avlesh.antwebtasks.util.WebAntUtil;
 import com.avlesh.antwebtasks.war.PowerWAR;
 
 public class CacheBuster {
-  private File versionFile;
-  private String versionPropertyKey;
-  private String versionText;
-  private List<Pattern> includes = new ArrayList<Pattern>();
-  private boolean verbose = true;
-  private boolean modifyOriginalFile = false;
-  private boolean checkFileLastModifiedTime = false;
-  private File cacheBusterPreferencesFile = new File(".cache-buster.pref");
-  private List<Rule> rules = new ArrayList<Rule>();
+  protected File versionFile;
+  protected String versionPropertyKey;
+  protected String versionText;
+  protected List<Pattern> includes = new ArrayList<Pattern>();
+  protected boolean verbose = true;
+  protected boolean modifyOriginalFile = false;
+  protected boolean checkFileLastModifiedTime = false;
+  protected File cacheBusterPreferencesFile = new File(".cache-buster.pref");
+  protected List<Rule> rules = new ArrayList<Rule>();
 
   public InputStream doCacheBusting(InputStream in, String vPath, PowerWAR task) throws IOException{
     String fileContent = WebAntUtil.getContentFromStream(in);

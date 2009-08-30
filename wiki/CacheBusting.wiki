@@ -36,18 +36,7 @@ The PowerWAR task of this Ant contribution lets you achieve this from the comfor
  </tr>
  <tr>
   <td width="100" valign="top" align="left">{{{versionFile}}}</td>
-  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement varaible %{version-file-txt}. 
-{{{
-<inject verbose="on">
-  <fileset dir="web">
-    <include name="**/*.xml"/>
-    <include name="**/*.properties"/>
-    <exclude name="**/web.xml" />
-  </fileset>
-</inject>
-}}}
- </td>
-  <td valign="top" align="left">Default: {{{none}}}, applies the inject directive to all the files in project's base directory to be added to the war archive.<br/><br/>Note: You can specify multiple {{{<fileset>}}} based selectors for a single {{{inject}}} element.
-  </td>
+  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement variable %{version-file-txt}.</td>
+  <td valign="top" align="left">Default: {{{none}}}<br/>Mandatory.</td>
  </tr>
 </table>

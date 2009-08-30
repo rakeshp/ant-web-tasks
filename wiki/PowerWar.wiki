@@ -4,16 +4,16 @@ PowerWAR, as the name says :), is a powerful extension of Ant's [http://ant.apac
 {{{
 <taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWar" classpath="/path/to/ant-web-tasks.jar"/>
 <target name="my-war-target">
-	<mkdir dir="distribution" />
-	<powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
-		<classes dir="${build.dir}/classes"/>
-		<lib dir="${lib.dir}">
-			<include name="*.jar" />
-		</lib>
-		<fileset dir="web">
-			<exclude name="**/web.xml" />
-		</fileset>
-	</powerWar>
+  <mkdir dir="distribution" />
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+    <classes dir="${build.dir}/classes"/>
+    <lib dir="${lib.dir}">
+      <include name="*.jar" />
+    </lib>
+    <fileset dir="web">
+      <exclude name="**/web.xml" />
+    </fileset>
+  </powerWar>
 </target>
 }}}
 
@@ -24,18 +24,18 @@ For an example, lets say you have a file
 WEB-INF/some-application-property.xml which has this content -
 {{{
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
- <property name="driverClassName">
-  <value>com.mysql.jdbc.Driver</value>
- </property>
- <property name="url">
-  <value>jdbc:mysql://${MYSQL.HOST}:${MYSQL.PORT}/${MYSQL.SCHEMA}</value>
- </property>
- <property name="username">
-  <value>${MYSQL.USER}</value>
- </property>
- <property name="password">
-  <value>${MYSQL.PASSWORD}</value>
- </property>
+  <property name="driverClassName">
+    <value>com.mysql.jdbc.Driver</value>
+  </property>
+  <property name="url">
+    <value>jdbc:mysql://${MYSQL.HOST}:${MYSQL.PORT}/${MYSQL.SCHEMA}</value>
+  </property>
+  <property name="username">
+    <value>${MYSQL.USER}</value>
+  </property>
+  <property name="password">
+    <value>${MYSQL.PASSWORD}</value>
+  </property>
 </bean>
 }}}
 ${MYSQL.USER} and the likes are nothing but fancy placeholders. If there is a build property called "MYSQL.USER" defined in Ant, then this token will get replaced with the corresponding value.

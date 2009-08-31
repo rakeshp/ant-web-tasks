@@ -78,7 +78,7 @@ build.user=avlesh
  <tr>
   <td width="100" valign="top" align="left">{{{cacheBusterPreferencesFile}}}</td>
   <td width="500" valign="top" align="left">When you want to use a file's last modified timestamp to apply cache busting rules, the {{{<cacheBuster>}}} tries to maintain the state such files in every run. This attribute is not required otherwise.</td>
-  <td valign="top" align="left">Default: {{{.cache-buster.pref}}}<br/>This file is saved in the project's base directory.</td>
+  <td valign="top" align="left">Default: {{{.cache-buster.pref}}}<br/><br/>This file is saved in the project's base directory.</td>
  </tr>
  <tr>
   <td width="100" valign="top" align="left">{{{modifyOriginal}}}</td>

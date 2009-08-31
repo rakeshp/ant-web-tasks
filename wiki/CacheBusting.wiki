@@ -71,9 +71,13 @@ build.user=avlesh
   <td valign="top" align="left">Default: {{{none}}}</td>
  </tr>
  <tr>
-  <td width="100" valign="top" align="left">{{{modifyOriginal}}}</td>
-  <td width="500" valign="top" align="left">When set to {{{true}}}, modifies the original content of the fileset (or the file group) on which cache busting rules are applied.<br/><br/>
-WARNING: You may seldom want to use this inside the <powerWar> task.</td>
-  <td valign="top" align="left">Default: {{{false}}}</td>
+  <td width="100" valign="top" align="left">{{{verbose}}}</td>
+  <td width="500" valign="top" align="left">See plenty of debug and info level messages on the Ant output stream.</td>
+  <td valign="top" align="left">Default: {{{true}}}</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{cacheBusterPreferencesFile}}}</td>
+  <td width="500" valign="top" align="left">When you want to use a file's last modified timestamp to apply cache busting rules, the <cacheBuster> tries to maintain the state such files in every run. This attribute is not required otherwise.</td>
+  <td valign="top" align="left">Default: {{{.cache-buster.pref}}}<br/>This file is saved in the project's base directory.</td>
  </tr>
 </table>

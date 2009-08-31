@@ -110,7 +110,8 @@ WARNING: You may seldom want to use this inside the {{{<powerWar>}}} task.</td>
 {{{file (Optional)}}}: The file for which the rule is being applied. If specified, an additional file lastmodied time check is done. If the file is not modified between versions, the {{{to}}} pattern conversion takes the last version number (since the file has not been modified) into account.<br/><br/>
 Examples:<br/>
 {{{
-<rule from="/css/(.*).css" to="/css/$1.css?version=%{version-file-txt}"/>
+<rule from="/css/(.*).css" 
+      to="/css/$1.css?version=%{version-file-txt}"/>
 <rule from="/js/massive.js" 
       to="/js/massive.js-%{version-file-txt}.js" 
       file="web/static-files/js/massive.js"/>

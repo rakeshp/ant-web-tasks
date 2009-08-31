@@ -65,7 +65,7 @@ build.user=avlesh
 <cacheBuster versionFile="my-file.properties" 
              versionPropertyKey="build.version">
   <fileset dir="web"/>
-  <rule from="/css/(.*).css" to="/css/$1.css?version=%{version-file-txt}"/>
+  ...
 </cacheBuster>
 }}}
 </td>

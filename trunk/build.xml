@@ -3,8 +3,11 @@
   <property environment="env"/>
   <property name="java-src.dir" value="src" />
   <property name="build.dir" value="build" />
-  <property name="distribution.dir" value="dist" />
-
+  <property name="dist.dir" value="dist" />
+  <property name="project.name" value="ant-web-tasks" />
+  <property name="project.version" value="1.0" />
+  <property name="archive.name" value="${project.name}-${project.version}" />
+  
   <path id="compile.classpath">
     <fileset dir="${env.ANT_HOME}/lib">
       <include name="*.jar" />
@@ -12,10 +15,25 @@
     <pathelement path="${build.dir}/classes" />
   </path>                           
 
+  <target name="sourceZip" depends="compile" description="packages up the class files into jar files">
+    <delete dir="${dist.dir}/source/${archive.name}-src" failonerror="false"/>
+    <delete file="${dist.dir}/${archive.name}-src.zip" failonerror="false"/>
+    <mkdir dir="${dist.dir}/source/${archive.name}-src"/>
+    <copy todir="${dist.dir}/source/${archive.name}-src" overwrite="true">
+      <fileset dir="." excludes="dist/**, build/**, *.iml, *.ipr, *.iws, **/.svn/**"/>
+    </copy>
+    <zip basedir="${dist.dir}/source" destfile="${dist.dir}/${archive.name}-src.zip"/>
+    <delete dir="${dist.dir}/source" failonerror="false"/>
+  </target>
+
+  <target name="dist" depends="clean">
+    <antcall target="jar"/>
+    <antcall target="sourceZip"/>
+  </target>
+
   <target name="jar" depends="compile" description="packages up the class files into jar files">
-    <property name="archive.target" value="${build.dir}/we-love-ant.jar" />
-    <jar destfile="${archive.target}" basedir="${build.dir}/classes" includes="**" />
-    <copy file="${build.dir}/we-love-ant.jar" tofile="D:\Projects\AskMe\Askme-WWW\build-only\ant-web-tasks.jar"/>
+    <jar destfile="${build.dir}/${archive.name}.jar" basedir="${build.dir}/classes" includes="**" />
+    <move file="${build.dir}/${archive.name}.jar" todir="${dist.dir}" overwrite="true"/>
   </target>
 
   <target name="compile" description="Compile main source tree java files">

@@ -166,7 +166,7 @@ Examples:<br/>
   </powerWar>
 </target>
 }}}
-<br/><br/><b>Apply cache-busting to all Javascript and CSS links in all JSP's</b>
+<br/><b>Apply cache-busting to all Javascript and CSS links in all JSP's</b>
 {{{
 <taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
 <target name="my-war-target">
@@ -185,3 +185,24 @@ Examples:<br/>
   </powerWar>
 </target>
 }}}
+<br/><b>Apply cache-busting all Javascript only when modified, CSS always</b>
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+    <cacheBuster verbose="on" versionFile="someFile.txt">
+      <fileset dir="web">
+        <include name="**/*.jsp"/>
+      </fileset>
+      <rule from="/static-content/js/myFile.js" 
+            to="/static-content/js/myFile.js?version=%{version-file-txt}"
+            file="web/static-files/js/my-file.js"/>
+      <rule from="/css/(.*).css" 
+            to="/css/$1.js?version=%{version-file-txt}"/>
+    </cacheBuster>
+    
+    ...
+  </powerWar>
+</target>
+}}}
+More elaborate examples coming soon ...

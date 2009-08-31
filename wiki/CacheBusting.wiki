@@ -36,7 +36,54 @@ The PowerWAR task of this Ant contribution lets you achieve this from the comfor
  </tr>
  <tr>
   <td width="100" valign="top" align="left">{{{versionFile}}}</td>
-  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement variable {{{ %{version-file-txt} }}}.</td>
+  <td width="500" valign="top" align="left">A file which is supposed to store the version (or revision or build number) for the project. The {{{cacheBuster}}} simply picks up this value and populates the replacement variable {{{ %{version-file-txt}. }}}
+<br/><br/>
+This file can be a java properties file too. Look at {{{versionPropertyKey}}} for details.</td>
   <td valign="top" align="left">Default: {{{none}}}<br/>Mandatory.</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{createVersionFileIfNotExists}}}</td>
+  <td width="500" valign="top" align="left">When set to {{{true}}}, creates the {{{versionFile}}} if it does not exist. Starting version number in the file is set to 1.</td>
+  <td valign="top" align="left">Default: {{{true}}}</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{autoIncrementVersionNumber}}}</td>
+  <td width="500" valign="top" align="left">You may want to use this attribute, when you are not managing the version file yourself. When set to {{{true}}}, the {{{<cacheBuster>}}} increments the value of version number in this file everytime it is called.</td>
+  <td valign="top" align="left">Default: {{{false}}}</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{versionPropertyKey}}}</td>
+  <td width="500" valign="top" align="left">If you were managing the version file yourself, chances are that your {{{versionFile}}} is a java properties file. Use this attribute to pass in the key name of the property against which the version number is stored.<br/><br/>
+Eaxmple:
+{{{
+<!-- Your java properties style version file -->
+build.date=Mon Aug 31 00:31:33 IST 2009
+build.version=444
+build.user=avlesh
+
+<!-- Your corresponding <cacheBuster> usage -->
+<cacheBuster versionFile="my-file.properties" versionPropertyKey="build.version">
+  <fileset dir="web"/>
+  <rule from="/css/(.*).css" to="/css/$1.css?version=%{version-file-txt}"/>
+</cacheBuster>
+}}}
+</td>
+  <td valign="top" align="left">Default: {{{none}}}</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{modifyOriginal}}}</td>
+  <td width="500" valign="top" align="left">When set to {{{true}}}, modifies the original content of the fileset (or the file group) on which cache busting rules are applied.<br/><br/>
+WARNING: You may seldom want to use this inside the <powerWar> task.</td>
+  <td valign="top" align="left">Default: {{{false}}}</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{verbose}}}</td>
+  <td width="500" valign="top" align="left">See plenty of debug and info level messages on the Ant output stream.</td>
+  <td valign="top" align="left">Default: {{{true}}}</td>
+ </tr>
+ <tr>
+  <td width="100" valign="top" align="left">{{{cacheBusterPreferencesFile}}}</td>
+  <td width="500" valign="top" align="left">When you want to use a file's last modified timestamp to apply cache busting rules, the <cacheBuster> tries to maintain the state such files in every run. This attribute is not required otherwise.</td>
+  <td valign="top" align="left">Default: {{{.cache-buster.pref}}}<br/>This file is saved in the project's base directory.</td>
  </tr>
 </table>

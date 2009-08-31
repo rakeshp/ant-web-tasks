@@ -112,6 +112,7 @@ Examples:<br/>
 {{{
 <rule from="/css/(.*).css" 
       to="/css/$1.css?version=%{version-file-txt}"/>
+
 <rule from="/js/massive.js" 
       to="/js/massive.js-%{version-file-txt}.js" 
       file="web/static-files/js/massive.js"/>
@@ -120,3 +121,67 @@ Examples:<br/>
   <td width="200" valign="top" align="left">Default: {{{none}}}.</td>
  </tr>
 </table>
+<br/>
+----
+=== Cache Busting Samples ===
+<b>Apply cache-busting to all Javascript links in all JSP's</b>
+<br/>Scenario: Your jsp's reference a lot of Javascript files via the {{{<script>}}}'s {{{src}}} attribute. The attribute values are URL's matching the pattern {{{/static-content/js/(.*).js}}}. The easiest way to bust cache is to change this URL everytime you deploy a new build. As the client (browser) gets to see a new URL for the javascript files, it will be forced to send a new request. After receiving the response, unless instructed otherwise, browser would cache the contents of the file and keep serving it from its cache (unless expired) until you change the URL again in the next build. Look at the sample usage below -
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+
+    <!--
+       Most minimal usage of the cacheBuster feature in the PowerWAR task.
+       
+       The attribute "versionFile" is mandatory. cacheBuster picks up the
+       content of this file and uses this as "revision number". The 
+       replacement attribute, %{version-file-txt}, is populated with this
+       value and can be used anywhere in the "to" attribute of the "rule" 
+    -->
+    <cacheBuster verbose="on" versionFile="someFile.txt">
+
+      <!--
+        Fileset(s) to apply all the rules on. This is the file group in 
+        which pattern's matching a rule's "from" are found and replaced
+        by their corresponding "to's"
+      
+        The example below is an instruction to find the URL patterns in
+        all ".jsp" files inside the "web" directory.
+      -->
+      <fileset dir="web">
+        <include name="**/*.jsp"/>
+      </fileset>
+      
+      <!-- 
+        Cache busting rule's to apply to the files above. In the example 
+        below all a URL "/static-content/js/my-file.js" would be deployed
+        as "/static-content/js/my-file.js?version=5" on the 5th build.
+      -->
+      <rule from="/static-content/js/(.*).js" 
+            to="/static-content/js/$1.js?version=%{version-file-txt}"/>
+    </cacheBuster>
+    
+    ...
+  </powerWar>
+</target>
+}}}
+<br/><br/><b>Apply cache-busting to all Javascript and CSS links in all JSP's</b>
+{{{
+<taskdef name="powerWar" classname="com.avlesh.antwebtasks.war.PowerWAR" classpath="/path/to/ant-web-tasks.jar"/>
+<target name="my-war-target">
+  <powerWar destfile="distribution/myapp.war" webxml="web/WEB-INF/web.xml" compress="true">
+    <cacheBuster verbose="on" versionFile="someFile.txt">
+      <fileset dir="web">
+        <include name="**/*.jsp"/>
+      </fileset>
+      <rule from="/static-content/js/(.*).js" 
+            to="/static-content/js/$1.js?version=%{version-file-txt}"/>
+      <rule from="/css/(.*).css" 
+            to="/css/$1.js?version=%{version-file-txt}"/>
+    </cacheBuster>
+    
+    ...
+  </powerWar>
+</target>
+}}}

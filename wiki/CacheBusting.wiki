@@ -83,7 +83,7 @@ build.user=avlesh
  <tr>
   <td width="100" valign="top" align="left">{{{modifyOriginal}}}</td>
   <td width="500" valign="top" align="left">When set to {{{true}}}, modifies the original content of the fileset (or the file group) on which cache busting rules are applied.<br/><br/>
-WARNING: You may seldom want to use this inside the <powerWar> task.</td>
+WARNING: You may seldom want to use this inside the {{{<powerWar>}}} task.</td>
   <td valign="top" align="left">Default: {{{false}}}</td>
  </tr>
 </table>

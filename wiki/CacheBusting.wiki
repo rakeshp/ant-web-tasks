@@ -88,7 +88,8 @@ WARNING: You may seldom want to use this inside the {{{<powerWar>}}} task.</td>
   <td valign="top" align="left">Default: {{{false}}}</td>
  </tr>
 </table>
-
+<br/>
+---
 === Cache Busting Nested Elements ===
 <table cellspacing="0" cellpadding="10" border="1" width="800">
  <tr>

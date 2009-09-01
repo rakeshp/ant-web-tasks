@@ -64,6 +64,11 @@ public class CacheBuster {
     
     List<CacheBusterRule> rules = getRules();
     for(CacheBusterRule rule : rules){
+      //If the rule is of "checkForLastModified" kind and the file is not yet modified,
+      //use a previous version number. This is also a fix for the issue
+      //http://code.google.com/p/ant-web-tasks/issues/detail?id=4
+      String versionTextForThisRule = versionText;
+
       if(rule.isEmpty()){
         if(rule.isCheckFileLastModifiedTime()){
           throw new BuildException("A <rule> tag should have a valid \"file\" attribute or a nested \"fileset\", " +
@@ -99,10 +104,11 @@ public class CacheBuster {
         if(cacheBusterPreferences.get(ruleFile.getPath()).getLastModifiedTime() < ruleFile.lastModified()){
           cacheBusterPreferences.get(ruleFile.getPath()).setVersion(versionText);
         }
-        versionText = cacheBusterPreferences.get(rule.getFile().getPath()).getVersion();
+
+        versionTextForThisRule = cacheBusterPreferences.get(rule.getFile().getPath()).getVersion();
       }
 
-      String replaceFormat = rule.getTo().replaceAll(VERSION_FILE_TXT, versionText);
+      String replaceFormat = rule.getTo().replaceAll(VERSION_FILE_TXT, versionTextForThisRule);
       rule.setTo(replaceFormat);
     }
 

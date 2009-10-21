@@ -149,9 +149,9 @@ public class CacheBuster {
       if(urlPatternMatcher.find()){
         if(isVerbose()){
           caller.log("Match found in " + filePath + "; replacing all: " + rule.from.pattern());
-          fileContent = urlPatternMatcher.replaceAll(rule.to);
-          streamModified = true;
         }
+        fileContent = urlPatternMatcher.replaceAll(rule.to);
+        streamModified = true;
       }
     }
 
